@@ -1,0 +1,38 @@
+{
+  "name": "package-downloader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "build": "tsc",
+    "clean": "rimraf dist/*",
+    "prepublish": "npm run clean; npm run build"
+  },
+  "bin": {
+    "packageDownloader": "dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "commander": "^8.3.0",
+    "deepmerge-json": "^1.2.0",
+    "download": "^8.0.0",
+    "pacote": "^12.0.2",
+    "ramda": "^0.27.1",
+    "rimraf": "^3.0.2",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "@types/bluebird": "^3.5.36",
+    "@types/download": "^8.0.0",
+    "@types/pacote": "^11.1.2",
+    "@types/ramda": "^0.27.62",
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.4"
+  }
+}
