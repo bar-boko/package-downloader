@@ -1,6 +1,6 @@
 {
   "name": "@bokovza/package-downloader",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "NPM Package Downloader by Bar Yochai Bokovza",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
