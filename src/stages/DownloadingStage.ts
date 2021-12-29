@@ -1,4 +1,5 @@
-import { keys, mergeAll, values } from 'ramda';
+import { keys, mergeAll, values, last, init, head } from 'ramda';
+import { resolve, sep } from 'path';
 import downloader from '../tools/Downloader';
 import { DependencyFlattenTree, PackageTarballs } from '../models/Packages';
 import { DownloadTask } from '../tools/Downloader';
@@ -14,21 +15,30 @@ const getPackagesTarballs = (dependencies: DependencyFlattenTree): PackageTarbal
   return mergeAll(packagesAndTarballs);
 }
 
+const createDownloadTask = (targetDir: string) => (sourcePath: string): DownloadTask => {
+  const sourcePathParts = sourcePath.split(sep);
+  const fileName = last(sourcePathParts) as string;
+  const sourceDirParts = init(sourcePathParts);
+  const sourceDir = resolve(...sourceDirParts);
+
+  return {
+    sourceDir,
+    fileName,
+    targetDir,
+  };
+}
+
 const getDownloadTasksFromTarballs = (outputDir: string, packageTarballs: PackageTarballs): DownloadTask[] => {
-  const keysss = keys(packageTarballs);
+  const packageNames = keys(packageTarballs)
+    .map(x => x as string);
 
-  const aaa = keysss.map(packageName => {
+  return packageNames.flatMap(packageName => {
     const tarballs = packageTarballs[packageName];
-    const firstTarball: string = tarballs[0];
-    const targetDir = getTargetFileDir(outputDir, packageName as string, firstTarball);
+    const firstTarball = head(tarballs) as string;
+    const targetDir = getTargetFileDir(outputDir, packageName, firstTarball);
 
-    return tarballs.map(sourcePath => ({
-      sourcePath,
-      targetDir,
-    }));
+    return tarballs.map(createDownloadTask(targetDir));
   });
-
-  return aaa.flatMap(x => x);
 };
 
 export default async (outputDir: string, dependencies: DependencyFlattenTree) => {
