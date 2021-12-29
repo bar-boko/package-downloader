@@ -17,13 +17,13 @@ export default async (...tasks: DownloadTask[]) => {
       return Promise.reject(error);
     }
 
-    Logger.info('Downloading', sourcePath, 'to', targetDir);
+    Logger.info(`Downloading '${sourcePath}' to '${targetDir}`);
 
     return download(sourcePath, targetDir)
-      .then(() => Logger.info('Successful Download', sourcePath))
+      .then(() => Logger.info(`Successful Download '${sourcePath}'`))
       .catch(error => {
         console.trace(error);
-        Logger.error('Failed Download', sourcePath, error);
+        Logger.error(`Failed Download'${sourcePath}'`, error);
       });
   });
 
