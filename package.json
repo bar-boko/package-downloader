@@ -8,7 +8,7 @@
     "start": "ts-node src/index.ts",
     "build": "tsc",
     "clean": "rimraf dist/*",
-    "prepublish": "npm run clean; npm run build"
+    "prepack": "npm run clean; npm run build"
   },
   "bin": {
     "packageDownloader": "dist/index.js"
