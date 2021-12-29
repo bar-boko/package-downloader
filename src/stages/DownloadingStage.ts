@@ -4,7 +4,7 @@ import downloader from '../tools/Downloader';
 import { DependencyFlattenTree, PackageTarballs } from '../models/Packages';
 import { DownloadTask } from '../tools/Downloader';
 import { Logger } from '../utils/Logger';
-import { getTargetFileDir } from '../utils/NameUtils';
+import { extractSourcePath, getTargetFileDir } from '../utils/NameUtils';
 
 const getPackagesTarballs = (dependencies: DependencyFlattenTree): PackageTarballs => {
   const packagesAndTarballs = keys(dependencies)
@@ -16,10 +16,11 @@ const getPackagesTarballs = (dependencies: DependencyFlattenTree): PackageTarbal
 }
 
 const createDownloadTask = (targetDir: string) => (sourcePath: string): DownloadTask => {
-  const sourcePathParts = sourcePath.split(sep);
-  const fileName = last(sourcePathParts) as string;
-  const sourceDirParts = init(sourcePathParts);
-  const sourceDir = resolve(...sourceDirParts);
+  const { fileName, sourceDir } = extractSourcePath(sourcePath);
+
+  Logger.warn(`Source Path is '${sourcePath}'`);
+  Logger.warn(`Source Dir is '${sourceDir}'`);
+  Logger.warn(`File Name is '${fileName}`);
 
   return {
     sourceDir,

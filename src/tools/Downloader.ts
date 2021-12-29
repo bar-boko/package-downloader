@@ -1,17 +1,14 @@
 import download from 'download';
-import path from 'path';
 import { allSettled } from 'bluebird';
 import fs from 'fs';
 import { Logger } from '../utils/Logger';
+import { getSourcePath, getTargetPath } from '../utils/NameUtils';
 
 export interface DownloadTask {
   sourceDir: string;
   fileName: string;
   targetDir: string;
 }
-
-const getSourcePath = ({ sourceDir, fileName }: DownloadTask) => path.resolve(sourceDir, fileName);
-const getTargetPath = ({ targetDir, fileName }: DownloadTask) => path.resolve(targetDir, fileName);
 
 const checkIfFileExists = async (downloadTask: DownloadTask): Promise<boolean> => {
   const targetPath = getTargetPath(downloadTask);
@@ -45,13 +42,13 @@ const executeDownloadTask = async (downloadTask: DownloadTask) => {
     Logger.info(`Successful Download '${sourcePath}'`)
   }
   catch (error) {
-    Logger.error(`Failed Download'${sourcePath}'`, error);
+    Logger.error(`Failed Download '${sourcePath}'`, error);
   }
 };
 
 const createDownloadTaskExecuter = async (downloadTask: DownloadTask) => {
-  const { sourceDir, fileName, targetDir } = downloadTask;
-  const sourcePath = path.resolve(sourceDir, fileName);
+  const { targetDir } = downloadTask;
+  const sourcePath = getSourcePath(downloadTask);
 
   await createTargetDir(targetDir);
   const fileExists = await checkIfFileExists(downloadTask);

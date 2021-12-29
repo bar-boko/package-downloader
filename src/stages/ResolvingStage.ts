@@ -51,14 +51,14 @@ export default async ({packages, devDeps}: CommandLineOptions) => {
     }   
 
     try {
-      Logger.info(`Resolve Package'${npmPackageName}'`);
+      Logger.info(`Resolve Package '${npmPackageName}'`);
 
       dependencyTree = await resolvePackage(npmPackageName, packagesStack, dependencyTree, devDeps);
 
       Logger.info(`Successfull Resolving Package '${npmPackageName}'`);
     }
     catch (error) {
-      Logger.error(`Error fetching Package'${npmPackageName}'`);
+      Logger.error(`Error fetching Package '${npmPackageName}'`);
       Logger.error(error);
     }
   }
