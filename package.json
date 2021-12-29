@@ -4,6 +4,7 @@
   "description": "NPM Package Downloader by Bar Yochai Bokovza",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "private": false,
   "scripts": {
     "start": "ts-node src/index.ts",
     "build": "tsc",
