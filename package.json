@@ -8,6 +8,7 @@
     "start": "ts-node src/index.ts",
     "build": "tsc",
     "clean": "rimraf dist/*",
+    "lint": "eslint . --ext .ts",
     "prepack": "npm run clean; npm run build"
   },
   "bin": {
@@ -32,6 +33,9 @@
     "@types/download": "^8.0.0",
     "@types/pacote": "^11.1.2",
     "@types/ramda": "^0.27.62",
+    "@typescript-eslint/eslint-plugin": "^5.8.1",
+    "@typescript-eslint/parser": "^5.8.1",
+    "eslint": "^8.5.0",
     "nodemon": "^2.0.15",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.4"

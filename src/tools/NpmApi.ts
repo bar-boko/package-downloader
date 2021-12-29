@@ -9,23 +9,18 @@ const parseDependencies = (dependencies: Record<string, string>): NpmPackage[] =
   }));
 
 export const fetchPackageManifest = async (packageName: string, devDeps?: boolean): Promise<NpmPackageManifest> => {
-  try {
-    const manifest = await pacote.manifest(packageName);
-    const dependencies: Record<string, string> = {
-      ...manifest.dependencies,
-      ...(devDeps ? manifest.devDependencies : {}),
-    };
+  const manifest = await pacote.manifest(packageName);
+  const { name, version, dist: { tarball }} = manifest;
+  
+  const dependencies: Record<string, string> = {
+    ...manifest.dependencies,
+    ...(devDeps ? manifest.devDependencies : {}),
+  };
 
-    const result: NpmPackageManifest = {
-      name: manifest.name,
-      version: manifest.version,
-      tarball: manifest.dist.tarball,
-      dependencies: parseDependencies(dependencies),
-    };
-
-    return result;
-  }
-  catch (error) {
-    throw error;
-  }
+  return {
+    name,
+    version,
+    tarball,
+    dependencies: parseDependencies(dependencies),
+  };
 };

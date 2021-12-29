@@ -24,14 +24,7 @@ const checkIfFileExists = async (downloadTask: DownloadTask): Promise<boolean> =
   }
 };
 
-const createTargetDir = async (targetDir: string): Promise<void> => {
-    try {
-      fs.mkdirSync(targetDir, { recursive: true });
-    }
-    catch (error) {
-      throw error;
-    }
-};
+const createTargetDir = (targetDir: string): string | undefined => fs.mkdirSync(targetDir, { recursive: true });
 
 const executeDownloadTask = async (downloadTask: DownloadTask) => {
   const sourcePath = getSourcePath(downloadTask);
