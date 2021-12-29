@@ -1,7 +1,7 @@
 {
   "name": "package-downloader",
   "version": "1.0.0",
-  "description": "",
+  "description": "NPM Package Downloader by Bar Yochai Bokovza",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -14,7 +14,7 @@
     "packageDownloader": "dist/index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Bar Yochai Bokovza",
   "license": "ISC",
   "dependencies": {
     "bluebird": "^3.7.2",
