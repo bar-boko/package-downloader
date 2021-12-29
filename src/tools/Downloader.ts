@@ -1,4 +1,5 @@
 import download from 'download';
+import PromiseThrottle from 'promise-throttle';
 import { allSettled } from 'bluebird';
 import fs from 'fs';
 import { Logger } from '../utils/Logger';
@@ -46,7 +47,7 @@ const executeDownloadTask = async (downloadTask: DownloadTask) => {
   }
 };
 
-const createDownloadTaskExecuter = async (downloadTask: DownloadTask) => {
+const createDownloadTaskExecuter = (downloadTask: DownloadTask) => async () => {
   const { targetDir } = downloadTask;
   const sourcePath = getSourcePath(downloadTask);
 
@@ -64,7 +65,13 @@ const createDownloadTaskExecuter = async (downloadTask: DownloadTask) => {
 };
 
 export default async (...tasks: DownloadTask[]) => {
-  const taskPromises = tasks.map(createDownloadTaskExecuter);
+  const promiseThrottle = new PromiseThrottle({
+    requestsPerSecond: 10,
+    promiseImplementation: Promise,
+  });
+
+  const taskPromises = tasks.map(createDownloadTaskExecuter)
+    .map(x => promiseThrottle.add(x.bind(this)));
 
   return await allSettled(taskPromises);
 }

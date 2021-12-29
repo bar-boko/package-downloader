@@ -1,5 +1,4 @@
-import { keys, mergeAll, values, last, init, head } from 'ramda';
-import { resolve, sep } from 'path';
+import { keys, mergeAll, values, head } from 'ramda';
 import downloader from '../tools/Downloader';
 import { DependencyFlattenTree, PackageTarballs } from '../models/Packages';
 import { DownloadTask } from '../tools/Downloader';

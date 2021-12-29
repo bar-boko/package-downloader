@@ -22,6 +22,7 @@
     "deepmerge-json": "^1.2.0",
     "download": "^8.0.0",
     "pacote": "^12.0.2",
+    "promise-throttle": "^1.1.2",
     "ramda": "^0.27.1",
     "rimraf": "^3.0.2",
     "winston": "^3.3.3"
