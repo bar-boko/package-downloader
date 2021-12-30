@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { Logger } from './utils/Logger';
 import { createCommand } from './tools/CommandLine';
 import ResolvingStage from './stages/ResolvingStage';
