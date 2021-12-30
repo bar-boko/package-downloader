@@ -17,10 +17,6 @@ const getPackagesTarballs = (dependencies: DependencyFlattenTree): PackageTarbal
 const createDownloadTask = (targetDir: string) => (sourcePath: string): DownloadTask => {
   const { fileName, sourceDir } = extractSourcePath(sourcePath);
 
-  Logger.warn(`Source Path is '${sourcePath}'`);
-  Logger.warn(`Source Dir is '${sourceDir}'`);
-  Logger.warn(`File Name is '${fileName}`);
-
   return {
     sourceDir,
     fileName,
