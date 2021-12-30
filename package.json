@@ -1,6 +1,6 @@
 {
   "name": "@bokovza/package-downloader",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "NPM Package Downloader by Bar Yochai Bokovza",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -18,7 +18,17 @@
   "bin": {
     "packageDownloader": "dist/index.js"
   },
-  "keywords": [],
+  "keywords": [
+    "npm",
+    "whiten",
+    "packages",
+    "package",
+    "package downloader",
+    "downloader",
+    "resolve",
+    "pacote",
+    "download"
+  ],
   "author": "Bar Yochai Bokovza",
   "license": "ISC",
   "dependencies": {
