@@ -3,7 +3,7 @@
 - You can download **multiple packages with dependencies**
   - The resolver will merge the entire dependency tree, for reducing the amount of packages to download
 - **The resolver uses [`pacote`](https://www.npmjs.com/package/pacote)**, which means that the same resolver of npm, used in this package downloader
-- **Skipping downloaded packages**, in case of running again the package downloader with different packages on the same output dir
+- **Skipping downloaded packages**, in case of running again the package downloader with different packages on the same output directory
 
 ## Usage
 ### Install
@@ -24,7 +24,7 @@ This example will download packages `react` and `react-router-dom` with all of t
 - Must be inside `"___"`
 - Write the name of the packages the same way you write when you run the command `npm install`
 
-### Output - `-o` or `--output`
+#### Output - `-o` or `--output`
 - Target Directory of the downloading
 - Must to write the name of the directory (even if it not exists) after the flag.
 
