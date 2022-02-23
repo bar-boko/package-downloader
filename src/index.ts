@@ -10,7 +10,7 @@ const options = createCommand();
 const app = async () => {
   try {
     const dependencyTree = await ResolvingStage(options);
-    await DownloadingStage(options.output, dependencyTree);
+    await DownloadingStage(options, dependencyTree);
   }
   catch (error) {
     Logger.error(error);

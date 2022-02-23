@@ -3,4 +3,5 @@ export interface CommandLineOptions {
   devDeps?: boolean;
   peerDeps?: boolean;
   output: string;
+  throttleLimit: number;
 }

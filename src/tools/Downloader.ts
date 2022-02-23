@@ -1,7 +1,6 @@
 import download from 'download';
-import PromiseThrottle from 'promise-throttle';
-import { allSettled } from 'bluebird';
 import fs from 'fs';
+import Bottleneck from 'bottleneck';
 import { Logger } from '../utils/Logger';
 import { getSourcePath, getTargetPath } from '../utils/NameUtils';
 
@@ -57,14 +56,15 @@ const createDownloadTaskExecuter = (downloadTask: DownloadTask) => async () => {
   await executeDownloadTask(downloadTask);
 };
 
-export default async (...tasks: DownloadTask[]) => {
-  const promiseThrottle = new PromiseThrottle({
-    requestsPerSecond: 10,
-    promiseImplementation: Promise,
+export default async (throttleLimit: number, ...tasks: DownloadTask[]) => {
+  const scheduler = new Bottleneck({
+    minTime: 333,
+    maxConcurrent: throttleLimit,
   });
 
-  const taskPromises = tasks.map(createDownloadTaskExecuter)
-    .map(x => promiseThrottle.add(x.bind(this)));
+  const taskPromises = tasks
+    .map(createDownloadTaskExecuter)
+    .map(x => scheduler.schedule(x.bind(this)));
 
-  return await allSettled(taskPromises);
+  return await Promise.all(taskPromises);
 }

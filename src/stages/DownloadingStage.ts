@@ -4,6 +4,7 @@ import { DependencyFlattenTree, PackageTarballs } from '../models/Packages';
 import { DownloadTask } from '../tools/Downloader';
 import { Logger } from '../utils/Logger';
 import { extractSourcePath, getTargetFileDir } from '../utils/NameUtils';
+import { CommandLineOptions } from '../models/Input';
 
 const getPackagesTarballs = (dependencies: DependencyFlattenTree): PackageTarballs => {
   const packagesAndTarballs = keys(dependencies)
@@ -37,13 +38,13 @@ const getDownloadTasksFromTarballs = (outputDir: string, packageTarballs: Packag
   });
 };
 
-export default async (outputDir: string, dependencies: DependencyFlattenTree) => {
+export default async ({ output: outputDir, throttleLimit }: CommandLineOptions, dependencies: DependencyFlattenTree) => {
   Logger.info('Downloading Stage - Started');
 
   const packageTarballs = getPackagesTarballs(dependencies);
   const downloadTasks = getDownloadTasksFromTarballs(outputDir, packageTarballs);
   
-  await downloader(...downloadTasks);
+  await downloader(throttleLimit, ...downloadTasks);
 
   Logger.info('Downloading Stage - Finished');
 };

@@ -1,4 +1,6 @@
 # @bokovza/package-downloader - NPM Package Downloader
+## Made with ❤️ by [Bar Yochai Bokovza](https://twitter.com/bar_boko) ([Buy me a ☕️](https://www.buymeacoffee.com/barboko))
+
 ## Main Features
 - You can download **multiple packages with dependencies**
   - The resolver will merge the entire dependency tree, for reducing the amount of packages to download
@@ -36,3 +38,8 @@ This example will download packages `react` and `react-router-dom` with all of t
 #### Peer Dependencies - `-e` or `--peerDeps`
 - Boolean flag
 - If `true`, also download peer dependencies
+
+#### Throttle Limit - `-l` or `--limit`
+- Positive Number flag
+- Sets the amount of parallel downloads to run
+- Default: 10

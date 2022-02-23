@@ -1,6 +1,6 @@
 import path from 'path';
 import { init, last } from 'ramda';
-import { NpmPackage } from "../models/Packages";
+import { NpmPackage } from '../models/Packages';
 import { DownloadTask } from '../tools/Downloader';
 
 export const getPackageNameWithVersion = ({ name, version }: NpmPackage) => `${name}@${version}`;
