@@ -20,7 +20,7 @@ const getMissingDependencies = (manifest: NpmPackageManifest, tree: DependencyFl
   ?.filter(({ name, version }) => {
       const packageVersions = tree[name];
 
-      return !packageVersions || Boolean(packageVersions[version]);
+      return !packageVersions || !Boolean(packageVersions[version]);
   });
 
 const resolvePackage = async (
