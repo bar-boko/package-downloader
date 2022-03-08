@@ -1,6 +1,7 @@
 import merge from "deepmerge-json";
+import { has, hasPath, partition, uniq } from "ramda";
 import { CommandLineOptions } from "../models/Input";
-import { DependencyFlattenTree, NpmPackageManifest } from "../models/Packages";
+import { DependencyFlattenTree, NpmPackage, NpmPackageManifest } from "../models/Packages";
 import { fetchPackageManifest } from "../tools/NpmApi";
 import { Logger } from "../utils/Logger";
 import { getPackageNameWithVersion } from "../utils/NameUtils";
@@ -15,13 +16,16 @@ const addPackageToTree = (tree: DependencyFlattenTree, { name, version, tarball 
   return merge(tree, resolvedPackage);
 };
 
-const getMissingDependencies = (manifest: NpmPackageManifest, tree: DependencyFlattenTree) => manifest
-  ?.dependencies
-  ?.filter(({ name, version }) => {
-      const packageVersions = tree[name];
+const isPackageResolved = ({ name, version }: NpmPackage, tree: DependencyFlattenTree): boolean => hasPath([name, version], tree);
 
-      return !packageVersions || !Boolean(packageVersions[version]);
-  });
+const getMissingDependencies = (manifest: NpmPackageManifest, tree: DependencyFlattenTree) => {
+  const condition = (dependencyPackage: NpmPackage) => isPackageResolved(dependencyPackage, tree); 
+  const [existingDependencies, missingDependenciess] = partition(condition, manifest?.dependencies ?? []);
+
+  existingDependencies.forEach(({ name, version }) => Logger.warn(`Skipping    - Package '${name}@${version}' already exists`));
+
+  return missingDependenciess;
+};
 
 const resolvePackage = async (
   packageName: string,
@@ -29,41 +33,56 @@ const resolvePackage = async (
   dependenciesTree: DependencyFlattenTree,
   devDeps?: boolean,
 ): Promise<DependencyFlattenTree> => {
-      const manifest = await fetchPackageManifest(packageName, devDeps);
-      const missingDependencies = getMissingDependencies(manifest, dependenciesTree)
-        .map(getPackageNameWithVersion);
-  
-      packagesStack.push(...missingDependencies);
-      return addPackageToTree(dependenciesTree, manifest);
+  const manifest = await fetchPackageManifest(packageName, devDeps);
+  const missingDependencies = getMissingDependencies(manifest, dependenciesTree)
+    .map(getPackageNameWithVersion);
+
+  packagesStack.push(...missingDependencies);
+
+  return addPackageToTree(dependenciesTree, manifest);
 };
 
 export default async ({packages, devDeps}: CommandLineOptions) => {
-  Logger.info('Resolving Stage - Started');
+  Logger.info('=================================');
+  Logger.info('Resolving Stage -         Started');
+  Logger.info('=================================');
 
-  const packagesStack = [...packages];
+  let packagesStack = [...packages];
+  const resolvedPackages: { [packageName: string]: boolean } = {};
   let dependencyTree: DependencyFlattenTree = {};
 
   while (packagesStack.length) {
     const npmPackageName = packagesStack.pop();
 
     if (!npmPackageName) {
+      Logger.warn('Skipping    - Empty Package');
       continue;
-    }   
+    }
+
+    if (has(npmPackageName, resolvedPackages)) {
+      Logger.warn(`Skipping    - Package '${npmPackageName}' already resolved`);
+      continue;
+    }
 
     try {
-      Logger.info(`Resolve Package '${npmPackageName}'`);
+      Logger.info(`Resolving   - ${npmPackageName}`);
 
       dependencyTree = await resolvePackage(npmPackageName, packagesStack, dependencyTree, devDeps);
+      packagesStack = uniq(packagesStack);
+      Object.assign(resolvedPackages, { [npmPackageName]: true });
 
-      Logger.info(`Successfull Resolving Package '${npmPackageName}'`);
+      Logger.info(`Resolved :) - ${npmPackageName}`);
+
     }
     catch (error) {
-      Logger.error(`Error fetching Package '${npmPackageName}'`);
+      Logger.error(`Error :(    - Fetching Package '${npmPackageName}'`);
       Logger.error(error);
     }
   }
 
-  Logger.info('Resolving Stage - Finished');
+  Logger.info('=================================');
+  Logger.info('Resolving Stage -        Finished');
+  Logger.info('=================================');
 
   return dependencyTree;
 }

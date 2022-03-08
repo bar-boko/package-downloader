@@ -39,12 +39,16 @@ const getDownloadTasksFromTarballs = (outputDir: string, packageTarballs: Packag
 };
 
 export default async ({ output: outputDir, throttleLimit }: CommandLineOptions, dependencies: DependencyFlattenTree) => {
-  Logger.info('Downloading Stage - Started');
+  Logger.info('=================================');
+  Logger.info('Downloading Stage -       Started');
+  Logger.info('=================================');
 
   const packageTarballs = getPackagesTarballs(dependencies);
   const downloadTasks = getDownloadTasksFromTarballs(outputDir, packageTarballs);
   
   await downloader(throttleLimit, ...downloadTasks);
 
-  Logger.info('Downloading Stage - Finished');
+  Logger.info('=================================');
+  Logger.info('Downloading Stage -      Finished');
+  Logger.info('=================================');
 };
